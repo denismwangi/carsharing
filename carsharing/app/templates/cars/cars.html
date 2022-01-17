@@ -1,0 +1,110 @@
+{% include 'includes/nav.html' %}
+<div class="container-fluid">
+
+    <div class="card mb-3">
+        <div class="card-header">
+          
+          <i class="fa fa-table"></i> My cars
+     <a href="../dashboard" class="btn btn-danger float-right" style="color: #ffffff; align-items: right" btn-lg float-right><i class="fa fa-home" aria-hidden="true"></i>
+                    Exit</i></a>
+                    <a onclick="goBack()" class="btn btn-info float-right"  style="color:#fff; margin-right: 10px"> <i class="fa fa-caret-left" aria-hidden="true"></i> Back</a>
+                    
+
+                    <a data-toggle="modal" data-target="#addModal" class="btn btn-primary float-right"  style="color: #ffffff; margin-right: 10px"><i class="fa fa-plus-square" aria-hidden="true"></i> Add
+                    Car</a>
+    </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+          <th>id</th>
+          <th>brand</th>
+                  <th>charges</th>
+                  <!-- <th>description</th> -->
+                  <th>location</th>
+                  <th>mileage</th>
+                  <th>rating</th>
+                  <th>regno</th>
+                  <th>photo</th>
+          <th>Action</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                   <th>id</th>
+          <th>brand</th>
+                  <th>charges</th>
+                <!--   <th>description</th> -->
+                  <th>location</th>
+                  <th>mileage</th>
+                  <th>rating</th>
+                  <th>regno</th>
+                  <th>photo</th>
+          <th>Action</th>
+                </tr>
+              </tfoot>
+
+             
+              <tbody style="font-size:13px;">
+                  {% for owned in data %}
+                  <tr>
+                   <td>{{owned.id}}</td>
+           <td>{{owned.brand}} </td>
+                   <td>{{owned.charges}} </td>
+                  <!--  <td>{{owned.description}} </td> -->
+                  <td>{{owned.location}} </td>
+                  <td>{{owned.mileage}} </td>
+                   <td>{{owned.rating}} </td>
+                  <td>{{owned.regno}} </td>
+                   <td>{{owned.photo}} </td>
+                   <td>
+          <div class="btn-group">
+          <a href="" class="btn btn-success" data-toggle="tooltip" title="Edit car" ><i class="fa fa-fw fa-edit"></i>Edit car</a>
+          <a href="" class="btn btn-danger" data-toggle="tooltip" title="Delete car" ><i class="fa fa-fw fa-trash"></i>Delete car</a>
+          </div>
+          </td>
+                
+                </tr>
+                {% endfor %}
+              </tbody>
+       
+            </table>
+          </div>
+        </div>
+        <!--<div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>-->
+      </div>
+    </div>
+<script type="text/javascript">
+
+$.ajax({
+    url: 'http://localhost:5000/api/cars?offset=&count=',
+    dataType: 'json',
+    success: function(data) {
+        for (var i=0; i<data.length; i++) {
+
+            var row = $('<tr><td>' + data[i].brand+ '</td><td>' 
+              + data[i].charges + '</td><td>' 
+              + data[i].description + '</td></tr>'
+              );
+            
+            $('#dataTable').append(row);
+
+
+        }
+        console.log(data);
+    },
+    error: function(jqXHR, textStatus, errorThrown){
+        alert('Error: ' + textStatus + ' - ' + errorThrown);
+    }
+});
+
+
+
+</script>
+ <script type="text/javascript">
+      function goBack() {
+  window.history.back();
+
+}
+</script>

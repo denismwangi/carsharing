@@ -1,0 +1,110 @@
+#!/usr/bin/python3
+
+import random
+import string
+from datetime import datetime
+from flask.app import Flask
+from app import db
+from app.models import Borrowed, Image, Transaction, User,Car
+import carsharing as csp
+
+
+def regno():
+    a=f"K{random.choice(string.ascii_uppercase)}{random.choice(string.ascii_uppercase)}".replace('O','B').replace('I','L')
+    b=f"{random.choice(string.digits)}{random.choice(string.digits)}{random.choice(string.digits)}{random.choice(string.ascii_uppercase)}"
+    return f"{a} {b}"
+
+car_images=["car-10.jpg","car-11.jpg","car-12.jpg","car-1.jpg","car-2.jpg","car-3.jpg","car-4.jpg","car-5.jpg","car-6.jpg","car-7.jpg","car-8.jpg","car-9.jpg"]
+person_images=["John.jpg","James.jpg","Jack.jpg","Jared_4.jpg"]
+
+
+
+def desc():
+    a="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    return a
+def loc():
+    a=["Eldoret","Embu","Garissa","Kakamega","Kisumu","Lamu","Meru","Mombasa","Nairobi","Nakuru"]
+    return random.choice(a)
+def brand():
+    a=["Toyota","Honda","Chevrolet","Ford","Mercedes","Jeep","BMW","Porsche","Subaru","Nissan","Volkswagen","Lexus","Audi"]
+    return random.choice(a)
+def mileage():
+    a=range(99,3000)
+    return random.choice(a)
+def charge():
+    a=range(99,3000)
+    return random.choice(a)
+
+def owner(max):
+    return random.choice(User.query.all()).id
+
+def phone():
+   return f"07{random.randint(1111,9999)}{random.randint(1111,9999)}"
+
+def add_cars():
+    for img in car_images:
+        car=Car(
+            regno=regno(),
+            brand=brand(),
+            charges=charge(),
+            mileage=mileage(),
+            location=loc(),
+            description=desc(),
+            ownerid=owner(4),
+            photo="uploads/"+img        
+        )
+        db.session.add(car)
+    db.session.commit()
+
+def add_users():
+    for img in person_images:
+        name=img.split(".")[0]
+        user=User(
+            email=f"{name}@gmail.com",
+            phone=phone(),
+            username=name,
+            password="1234",
+            about="A good lender",
+            photo="uploads/"+img
+        )
+        db.session.add(user)
+    db.session.commit()
+
+def add_transactions():
+    for _ in range(10):
+        transaction=Transaction(
+            borrowerid=random.choice(User.query.all()).id,
+            ownerid=random.choice(User.query.all()).id,
+            carid=random.choice(Car.query.all()).id,
+            amountpaid=random.randint(1000,50000)
+        )
+        db.session.add(transaction)
+    db.session.commit()
+
+def add_borrowed():
+    for _ in range(10):
+        borrowed=Borrowed(
+            userid=random.choice(User.query.all()).id,
+            carid=random.choice(Car.query.all()).id,
+            expected_on=datetime.utcnow(),
+            borrowed_on=datetime.utcnow(),
+            duration=random.randint(1,10),
+            borrowed_loc=random.choice(Car.query.all()).location,
+            expected_loc=random.choice(Car.query.all()).location,
+        )
+        db.session.add(borrowed)
+    db.session.commit()
+
+
+with csp.app.app_context():
+    add_users()
+    add_cars()
+    add_transactions()
+    add_borrowed()
+    for car in Car.query.all():
+        db.session.add(Image(carid=car.id,path=car.photo))
+        db.session.add(Image(carid=car.id,path=car.photo))
+        db.session.add(Image(carid=car.id,path=car.photo))
+    db.session.commit()
+    
+
