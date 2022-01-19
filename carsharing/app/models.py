@@ -1,3 +1,4 @@
+from email.policy import default
 from werkzeug.security import generate_password_hash,check_password_hash
 from . import db,login_manager
 from datetime import datetime
@@ -70,6 +71,11 @@ class Car(db.Model):
     rating=db.Column(db.Integer,default=1)
     ownerid=db.Column(db.Integer,db.ForeignKey("users.id"))
     photo=db.Column(db.String(64))
+    transmission=db.Column(db.String(64))
+    seats=db.Column(db.Integer)
+    luggage=db.Column(db.Integer)
+    fuel=db.Column(db.String(64))
+    engine=db.Column(db.String(64))
     images=db.relationship("Image",backref="pics",cascade="all,delete-orphan")
 
 class Image(db.Model):
@@ -85,6 +91,7 @@ class Borrowed(db.Model):
     carid=db.Column(db.Integer)
     borrowed_on=db.Column(db.DateTime(), default=datetime.utcnow)
     expected_on=db.Column(db.DateTime())
+    status=db.Column(db.String(64),default="pending")
     duration=db.Column(db.Integer)
     borrowed_loc=db.Column(db.String(64))
     expected_loc=db.Column(db.String(64))
@@ -95,6 +102,7 @@ class Transaction(db.Model):
     borrowerid=db.Column(db.Integer)
     ownerid=db.Column(db.Integer)
     carid=db.Column(db.Integer)
+    status=db.Column(db.String(64),default="pending")
     date=db.Column(db.DateTime(),default=datetime.utcnow)
-    amount=db.Column(db.Integer)
+    amount=db.Column(db.Integer,default=0)
 
