@@ -1,0 +1,68 @@
+ {% include 'includes/nav.html' %}
+
+ <div class="container-fluid">
+      
+  
+      <!-- Example DataTables Card-->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Borrow Car
+          <a href="../dashboard" class="btn btn-danger float-right" style="color: #ffffff; align-items: right" btn-lg float-right><i class="fa fa-home" aria-hidden="true"></i>
+                    Exit</i></a>
+                    <a onclick="goBack()" class="btn btn-info float-right"  style="color:#fff; margin-right: 10px"> <i class="fa fa-caret-left" aria-hidden="true"></i> Back</a>
+    </div>
+        <div class="card-body">
+     
+         <form method="POST" action="/api/cars/{{data.id}}/borrow" >
+
+		  <div class="form-group">
+		  <div class="form-row">
+		  <div class="col-lg-6">
+        
+            <label for="exampleInputPassword1">Car Id</label>
+		
+            <input class="form-control" id="exampleInputPassword1" type="text" name="carid" value="{{data.id}}" >
+              
+          </div>
+		  <div class="col-lg-6">
+            <label for="exampleInputPassword1">From</label>
+            <input class="form-control" id="exampleInputPassword1" type="date" name="from" value="" >
+          </div>
+		  <div class="col-lg-6">
+            <label for="exampleInputPassword1">Until</label>
+            <input class="form-control" id="exampleInputPassword1" type="date" name="until" value="" >
+          </div>
+		  <div class="col-lg-6">
+            <label for="exampleInputPassword1">Duration</label>
+            <input class="form-control" id="exampleInputPassword1" type="text" name="duration" value="" >
+          </div>
+		  <div class="col-lg-6">
+            <label for="exampleInputPassword1">Borrowed Location</label>
+            <input class="form-control" id="exampleInputPassword1" type="text" name="pick_up" value="">
+          </div>
+           <div class="col-lg-6">
+            <label for="exampleInputPassword1">Expected Location</label>
+            <input class="form-control" id="exampleInputPassword1" type="text" name="drop_off" value="" >
+          </div>
+		  
+		  </div>
+		  </div>
+		  
+		  
+          <div class="modal-footer">
+            <a href="" class="btn btn-secondary" type="button" >Cancel</a>
+            <button name="edit" type="submit" class="btn btn-primary" >Submit</button>
+          </div>
+		  </form>
+          </div>
+        </div>
+        <!--<div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>-->
+      </div>
+    </div>
+    <script type="text/javascript">
+      function goBack() {
+  window.history.back();
+
+}
+</script>
+{% include 'includes/footer.html' %}

@@ -29,7 +29,9 @@ def user_info(id):
     if not user:
         return response_with(resp.SERVER_ERROR_404,value={})
     user=marshal(user,user_data)
-    return response_with(resp.SUCCESS_200,value={"user":user})
+    #return response_with(resp.SUCCESS_200,value={"user":user})
+    return render_template('cars/profile.html', data=user)
+
 
 
 @users.route("/owned")
@@ -58,7 +60,8 @@ def borrowed():
 def on_lend():
     on_lend=[marshal(entry,borrowed_data) for entry in
                 Borrowed.query.all() if entry.carid in [car.id for car in current_user.cars]]
-    return response_with(resp.SUCCESS_200,value={"onlend_cars":on_lend})
+    # return response_with(resp.SUCCESS_200,value={"onlend_cars":on_lend})
+    return render_template('cars/onlend.html', data=on_lend)
 
 
 @users.route("/transactions")

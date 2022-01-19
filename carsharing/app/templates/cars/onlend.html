@@ -10,8 +10,8 @@
                     <a onclick="goBack()" class="btn btn-info float-right"  style="color:#fff; margin-right: 10px"> <i class="fa fa-caret-left" aria-hidden="true"></i> Back</a>
                     
 
-                    <a data-toggle="modal" data-target="#addModal" class="btn btn-primary float-right"  style="color: #ffffff; margin-right: 10px"><i class="fa fa-plus-square" aria-hidden="true"></i> Add
-                    Car</a>
+                    <!-- <a data-toggle="modal" data-target="#addModal" class="btn btn-primary float-right"  style="color: #ffffff; margin-right: 10px"><i class="fa fa-plus-square" aria-hidden="true"></i> Add
+                    Car</a> -->
     </div>
         <div class="card-body">
           <div class="table-responsive">
@@ -26,7 +26,7 @@
                   <th>Dorrowed location</th>
                   <th>Expected location</th>
                 
-          <th>Action</th>
+         <!--  <th>Action</th> -->
                 </tr>
               </thead>
               <tfoot>
@@ -39,26 +39,26 @@
                   <th>Dorrowed location</th>
                   <th>Expected location</th>
                 
-          <th>Action</th>
+        <!--   <th>Action</th> -->
                 </tr>
               </tfoot>
 
              
               <tbody style="font-size:13px;">
-                  {% for borrowed in data %}
+                  {% for on_lend in data %}
                   <tr>
-                   <td>{{borrowed.id}}</td>
-                    <td>{{borrowed.carid}} </td>
-           <td>{{borrowed.borrowed_on}} </td>
-                   <td>{{borrowed.expected_on}} </td>
-                   <td>{{borrowed.duration}} </td>
-                  <td>{{borrowed.borrowed_loc}} </td>
-                  <td>{{borrowed.expected_loc}} </td>
+                   <td>{{on_lend.id}}</td>
+                    <td>{{on_lend.carid}} </td>
+           <td>{{on_lend.borrowed_on}} </td>
+                   <td>{{on_lend.expected_on}} </td>
+                   <td>{{on_lend.duration}} </td>
+                  <td>{{on_lend.borrowed_loc}} </td>
+                  <td>{{on_lend.expected_loc}} </td>
                   
                  
                    <td>
           <div class="btn-group">
-          <a href="/api/cars/{{borrowed.carid}}/return" class="btn btn-success" data-toggle="tooltip" title="" ><i class="fa fa-fw fa-edit"></i>Return</a>
+          <!-- <a href="" class="btn btn-success" data-toggle="tooltip" title="" ><i class="fa fa-fw fa-edit"></i>Return</a> -->
           <!-- <a href="" class="btn btn-danger" data-toggle="tooltip" title="Delete car" ><i class="fa fa-fw fa-trash"></i>Delete car</a> -->
           </div>
           </td>
@@ -106,5 +106,4 @@ $.ajax({
 
 }
 </script>
-
 {% include 'includes/footer.html' %}

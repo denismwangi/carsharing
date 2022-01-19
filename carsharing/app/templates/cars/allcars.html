@@ -60,8 +60,8 @@
                    <td>{{cars.photo}} </td>
                    <td>
           <div class="btn-group">
-          <a href="" class="btn btn-success" data-toggle="tooltip" title="Edit car" ><i class="fa fa-fw fa-edit"></i>Borrow</a>
-          <!-- <a href="" class="btn btn-danger" data-toggle="tooltip" title="Delete car" ><i class="fa fa-fw fa-trash"></i>Delete car</a> -->
+          <a href="/api/cars/{{cars.id}}/bid" class="btn btn-success" data-toggle="tooltip" title="Edit car" ><i class="fa fa-fw fa-edit"></i>Borrow</a>
+          <a href="" class="btn btn-info" data-toggle="tooltip" title="" ><i class="fa fa-fw fa-eye"></i>View</a>
           </div>
           </td>
                 
@@ -108,3 +108,4 @@ $.ajax({
 
 }
 </script>
+{% include 'includes/footer.html' %}

@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import request,render_template,redirect
+from flask import request,render_template,redirect,session
 import timedelta
 from app.models import Borrowed, Transaction, User,Car
 from app import db,user_sids
@@ -14,6 +14,29 @@ from ..data import car_data,user_data
 # from flask_socketio import emit
 
 cars=Blueprint("cars",__name__)
+
+def all_cars(count=None,offset=None):
+    if not count or not offset:
+        count=5
+        offset=0
+    else:
+        count,offset=int(count),int(offset)
+        if offset>Car.query.count() or count>Car.query.count():
+            count=1
+            offset=0
+        if offset<0 or count<0:
+            count=0
+            offset=0
+
+    data=[]
+    cars=Car.query.order_by(Car.id).slice(offset,count)
+    for entry in  cars:
+        car=marshal(entry,car_data)
+        car["images"]=[image.path for image in entry.images]
+        data.append(car)
+    # return response_with(resp.SUCCESS_200,value={"cars":data})
+    return data
+    
 
 @cars.route("/",methods=["GET"])
 def index():
@@ -50,6 +73,7 @@ def car(id):
     return response_with(resp.SUCCESS_200,value={"car":response})
 
 
+
 @cars.route("/<int:id>/owner")
 def owner(id):
     car=Car.query.filter_by(id=id).first()
@@ -77,6 +101,20 @@ def borrowed_info(id):
         return response_with(resp.SERVER_ERROR_404,value={})
     return response_with(resp.SUCCESS_200,value={"borrowed_car":marshal(car,borrowed_data)})
 
+
+
+@cars.route("/<int:id>/bid")
+@auth_required
+def update(id):
+    data=Car.query.filter_by(id=id).first()
+
+    if not data:
+        return redirect(url_for('index'))
+    else:
+        session['update'] = id
+        return render_template('cars/borrow.html', data = data)
+
+
 @cars.route("/<int:id>/borrow",methods=["POST"])
 @auth_required
 def borrow(id):
@@ -84,14 +122,15 @@ def borrow(id):
         "from":request.args.get("from"),
         "until":request.args.get("until"),
         "duration":request.args.get("duration"),
-        "pick_up":request.args("pick_up"),
-        "drop_off":request.args("drop_off")}
+        "pick_up":request.args.get("pick_up"),
+        "drop_off":request.args.get("drop_off")}
     car=Car.query.filter_by(id=id).first()
-    if not car:
-        return response_with(resp.SERVER_ERROR_404,value={})
-    owner=user_sids.get(car.ownerid)
-    if not owner:
-        return response_with({"error":"owner is not available,try again later"})
+    return render_template('cars/borrowed.html')
+    # if not car:
+    #     return render_template('cars/borrow.html', data = data)
+    # owner=user_sids.get(car.ownerid)
+    # if not owner:
+    #     return response_with({"error":"owner is not available,try again later"})
     # emit("request_car",req,room=owner)
 
 
@@ -132,6 +171,7 @@ def return_car(id):
     db.session.add(transaction)
     db.session.commit()
     Borrowed.query.filter_by(carid=id).delete()
-    return response_with(resp.SUCCESS_200)
+    return render_template('cars/borrowed.html')
+    #return response_with(resp.SUCCESS_200)
 
 
