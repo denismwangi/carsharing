@@ -1,6 +1,6 @@
 import os
 from secrets import token_urlsafe
-from flask import render_template,request,Blueprint,current_app
+from flask import render_template,request,Blueprint,current_app,redirect,url_for
 from flask_login import login_required
 from app.models import Borrowed, Transaction, User,Car
 from app.api.routes.cars import all_cars
@@ -50,6 +50,6 @@ def add_car():
             fuel=fuel,
             engine=engine,
         )
-
-
+        return redirect(url_for("accounts.dashboard"))
+    return render_template("cars/addcar.html")
 
