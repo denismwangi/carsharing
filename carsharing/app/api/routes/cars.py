@@ -1,8 +1,5 @@
-from dataclasses import field
 from datetime import datetime
-from os import stat
 from flask import request,render_template,redirect,session
-from carsharing.app.api.routes.users import borrowed
 from flask_restful import fields
 import timedelta
 from app.models import Borrowed, Transaction, User,Car

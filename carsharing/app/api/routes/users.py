@@ -1,4 +1,3 @@
-from flask import jsonify,g
 from app.models import Borrowed, Transaction, User,Car
 from flask import Blueprint,render_template,redirect
 from flask_login import current_user
