@@ -193,7 +193,7 @@ def pending_returns():
 
 @cars.route("/<int:id>/confirm_return")
 @auth_required
-def return_car(id):
+def confirm_return(id):
     transaction=Transaction.query.filter_by(carid=id).first()
     borrow=Borrowed.query.filter_by(carid=id).first()
     duration=timedelta.Timedelta(datetime.utcnow()-borrow.borrowed_on).total.hours
