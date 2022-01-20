@@ -1,8 +1,5 @@
-from dataclasses import field
 from datetime import datetime
-from os import stat
 from flask import request,render_template,redirect,session
-from carsharing.app.api.routes.users import borrowed
 from flask_restful import fields
 import timedelta
 from app.models import Borrowed, Transaction, User,Car
@@ -215,7 +212,7 @@ def pending_returns():
 
 @cars.route("/<int:id>/confirm_return")
 @auth_required
-def return_car(id):
+def confirm_return(id):
     transaction=Transaction.query.filter_by(carid=id).first()
     borrow=Borrowed.query.filter_by(carid=id).first()
     duration=timedelta.Timedelta(datetime.utcnow()-borrow.borrowed_on).total.hours
