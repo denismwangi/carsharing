@@ -3,7 +3,7 @@ from secrets import token_urlsafe
 from flask import render_template,redirect,current_app,request,url_for,flash
 from flask_login import login_required,login_user,logout_user
 from flask import Blueprint,request
-from  app.models import User
+from  app.models import User,Car
 from  app.utils import send_email
 from  app import db,user_sids
 
