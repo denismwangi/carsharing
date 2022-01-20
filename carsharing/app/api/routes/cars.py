@@ -36,7 +36,7 @@ def all_cars(count=None,offset=None):
         data.append(car)
     # return response_with(resp.SUCCESS_200,value={"cars":data})
     return data
-    
+
 
 @cars.route("/",methods=["GET"])
 def index():
@@ -71,8 +71,23 @@ def car(id):
         return response_with(resp.SERVER_ERROR_404,value={})
     response=marshal(car,car_data)
     response["images"]=[image.path for image in car.images]
+   
     return response_with(resp.SUCCESS_200,value={"car":response})
 
+<<<<<<< HEAD
+@cars.route("/<int:id>",methods=["GET"])
+def car__single(id):
+    car=Car.query.filter_by(id=id).first()
+    if not car:
+        return response_with(resp.SERVER_ERROR_404,value={})
+    response=marshal(car,car_data)
+    response["images"]=[image.path for image in car.images]
+    return response
+    # return response_with(resp.SUCCESS_200,value={"car":response})
+
+
+=======
+>>>>>>> 209a401759f5937a8c2499c9c28161e07ed2048c
 @cars.route("/<int:id>/owner")
 def owner(id):
     car=Car.query.filter_by(id=id).first()
@@ -101,7 +116,6 @@ def borrowed_info(id):
     if not car:
         return response_with(resp.SERVER_ERROR_404,value={})
     return response_with(resp.SUCCESS_200,value={"borrowed_car":marshal(car,borrowed_data)})
-
 
 
 @cars.route("/<int:id>/bid")
@@ -162,7 +176,12 @@ def grant_car(id):
     return "success",200
 
 
+<<<<<<< HEAD
+
+@cars.route("/<int:bid>/return")
+=======
 @cars.route("/<int:id>/return",methods=["GET"])
+>>>>>>> 209a401759f5937a8c2499c9c28161e07ed2048c
 @auth_required
 def return_car(id):
     transaction=Transaction(
@@ -202,9 +221,34 @@ def confirm_return(id):
     transaction.status="confirmed"
     transaction.amount= amount
 
+<<<<<<< HEAD
+@cars.route("/<int:id>/accept")
+@auth_required
+def accept_car(id):
+    car=Car.query.filter_by(id=id).first()
+    if not car:
+        return response_with(resp.SERVER_ERROR_404)
+    if car.ownerid!=current_user.id:
+        return response_with(resp.UNAUTHORIZED_403)
+    borrow=Borrowed.query.filter_by(carid=id).first()
+    duration=timedelta.Timedelta(datetime.utcnow()-borrow.borrowed_on).total.hours
+    transaction=Transaction(
+        borrowerid=borrow.userid,
+        ownerid=car.ownerid,
+        carid=id,
+        amount=duration*car.charges
+    )
+    db.session.add(transaction)
+    db.session.commit()
+    Borrowed.query.filter_by(carid=id).delete()
+    return render_template('cars/borrowed.html')
+    #return response_with(resp.SUCCESS_200)
+
+=======
     db.session.add(transaction)
     db.session.commit()
 
     Borrowed.query.filter_by(carid=id).delete()
     # return render_template('cars/borrowed.html')
     return response_with(resp.SUCCESS_200)
+>>>>>>> 209a401759f5937a8c2499c9c28161e07ed2048c

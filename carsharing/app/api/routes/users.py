@@ -21,6 +21,14 @@ def index():
         data=marshal(current_user,user_data)
         return response_with(resp.SUCCESS_200,value={"user":data})
 
+@users.route("/profile")
+@auth_required
+def profile():
+    data=marshal(current_user,user_data)
+    return render_template('cars/profile.html', data=data)
+
+
+
 @users.route("/<int:id>")
 @auth_required
 def user_info(id):
@@ -29,7 +37,7 @@ def user_info(id):
         return response_with(resp.SERVER_ERROR_404,value={})
     user=marshal(user,user_data)
     #return response_with(resp.SUCCESS_200,value={"user":user})
-    return render_template('cars/profile.html', data=user)
+   
 
 
 
