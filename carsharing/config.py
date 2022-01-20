@@ -13,11 +13,10 @@ class Config:
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
-
     @staticmethod
     def init_app(app):
         pass
-    
+
 class  DevelopmentConfig(Config):
     DEBUG=True
     username="root"

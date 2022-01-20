@@ -1,5 +1,9 @@
+from dataclasses import field
 from datetime import datetime
+from os import stat
 from flask import request,render_template,redirect,session
+from carsharing.app.api.routes.users import borrowed
+from flask_restful import fields
 import timedelta
 from app.models import Borrowed, Transaction, User,Car
 from app import db,user_sids
@@ -7,9 +11,8 @@ from flask_login import current_user
 from ..utils.responses import auth_required, response_with
 from ..data import user_data,car_data,borrowed_data
 from ..utils import responses as resp
-from flask import Blueprint
+from flask import Blueprint,url_for
 from flask_restful import marshal
-from flask import jsonify
 from ..data import car_data,user_data
 # from flask_socketio import emit
 
@@ -63,6 +66,7 @@ def index():
     # return response_with(resp.SUCCESS_200,value={"cars":data})
     return render_template('cars/allcars.html', data=cars)
 
+
 @cars.route("/<int:id>",methods=["GET"])
 def car(id):
     car=Car.query.filter_by(id=id).first()
@@ -73,6 +77,7 @@ def car(id):
    
     return response_with(resp.SUCCESS_200,value={"car":response})
 
+<<<<<<< HEAD
 @cars.route("/<int:id>",methods=["GET"])
 def car__single(id):
     car=Car.query.filter_by(id=id).first()
@@ -84,6 +89,8 @@ def car__single(id):
     # return response_with(resp.SUCCESS_200,value={"car":response})
 
 
+=======
+>>>>>>> 209a401759f5937a8c2499c9c28161e07ed2048c
 @cars.route("/<int:id>/owner")
 def owner(id):
     car=Car.query.filter_by(id=id).first()
@@ -105,6 +112,7 @@ def available(id):
         return response_with(resp.SUCCESS_200,value={"status":{"available":True}})
 
 
+#data about a borrowed car
 @cars.route("/<int:id>/borrowed")
 def borrowed_info(id):
     car=Borrowed.query.filter_by(carid=id).first()
@@ -117,7 +125,6 @@ def borrowed_info(id):
 @auth_required
 def update(id):
     data=Car.query.filter_by(id=id).first()
-
     if not data:
         return redirect(url_for('index'))
     else:
@@ -128,64 +135,96 @@ def update(id):
 @cars.route("/<int:id>/borrow",methods=["POST"])
 @auth_required
 def borrow(id):
-    req={"carid":id,
-        "from":request.args.get("from"),
-        "until":request.args.get("until"),
-        "duration":request.args.get("duration"),
-        "pick_up":request.args.get("pick_up"),
-        "drop_off":request.args.get("drop_off")}
-    car=Car.query.filter_by(id=id).first()
-    return render_template('cars/borrowed.html')
-    # if not car:
-    #     return render_template('cars/borrow.html', data = data)
-    # owner=user_sids.get(car.ownerid)
-    # if not owner:
-    #     return response_with({"error":"owner is not available,try again later"})
-    # emit("request_car",req,room=owner)
+    carid=id
+    from_date=request.args.get("from")
+    until_date=request.args.get("until")
+    duration=request.args.get("duration")
+    pick_up=request.args.get("pick_up")
+    drop_off=request.args.get("drop_off")
 
+    if Borrowed.query.filter_by(carid=id).first():
+        return  {"error":"car is not available for borrowing"}
 
-@cars.route("/<int:id>/grant",methods=["POST"])
-@auth_required
-def grant_car():
-    car=Car.query.filter_by(id=id).first()
-    if not car:
-        return response_with(resp.SERVER_ERROR_404)
-    if car.ownerid!=current_user.id:
-        return response_with(resp.UNAUTHORIZED_403)
-
-    borrowed=Borrowed(borrowed_on=request.args.get("from"),
-            expected_on=request.args.get("until"),
-            duration=request.args.get("duration"),
-            borrowed_loc=request.args("borrowed_loc"),
-            expected_loc=request.args("expected_loc"))
+    borrowed=Borrowed(
+        userid=current_user.id,
+        carid=carid,
+        borrowed_on=from_date,
+        expected_on=until_date,
+        duration=duration,
+        borrowed_loc=pick_up,
+        expected_loc=drop_off
+    )
     db.session.add(borrowed)
     db.session.commit()
+    return response_with(resp.SUCCESS_200)
+
+@cars.route("/pending_grants",methods=["GET"])
+@auth_required
+def pending_grants():
+    data=[]
+    borrowed=Borrowed.query.filter_by(userid=current_user.id,status="pending")
+    for borrow in borrowed:
+        if Car.query.filter_by(carid=borrow.carid,ownerid=current_user.id):
+            entry=marshal(borrow,borrowed_data)
+            data.append(entry)
+    return response_with(resp.SUCCESS_200,value={"pending_grants":data})
 
 
+@cars.route("/<int:id>/grant",methods=["GRANT"])
+@auth_required
+def grant_car(id):
+    borrow=Borrowed.query.filter_by(carid=id).first()
+    borrow.status="confirmed"
+    db.session.commit()
+    return "success",200
+
+
+<<<<<<< HEAD
 
 @cars.route("/<int:bid>/return")
+=======
+@cars.route("/<int:id>/return",methods=["GET"])
+>>>>>>> 209a401759f5937a8c2499c9c28161e07ed2048c
 @auth_required
 def return_car(id):
-    car=Car.query.filter_by(id=id).first()
-    if not car:
-        return response_with(resp.SERVER_ERROR_404)
-    if car.ownerid!=current_user.id:
-        return response_with(resp.UNAUTHORIZED_403)
-    borrow=Borrowed.query.filter_by(carid=id).first()
-    duration=timedelta.Timedelta(datetime.utcnow()-borrow.borrowed_on).total.hours
     transaction=Transaction(
-        borrowerid=borrow.userid,
-        ownerid=car.ownerid,
-        carid=id,
-        amount=duration*car.charges
+        borrowerid=current_user.id,
+        ownerid=Car.query.filter_by(id=id).first().ownerid,
+        carid=id
     )
     db.session.add(transaction)
     db.session.commit()
-    Borrowed.query.filter_by(carid=id).delete()
-    return render_template('cars/borrowed.html')
-    #return response_with(resp.SUCCESS_200)
+    return response_with(resp.SUCCESS_200)
+
+@cars.route("/pending_returns",methods=["GET"])
+@auth_required
+def pending_returns():
+    data=[]
+    trans_dat={
+        "id":fields.Integer,
+        "borrowerid":fields.Integer,
+        "carid":fields.Integer,
+        "status":fields.String,
+        "date":fields.DateTime
+    }
+    transactions=Transaction(ownerid=current_user.id,status="pending")
+    for trans in transactions:
+        data.append(marshal(trans,trans_dat))
+    return response_with(resp.SUCCESS_200,value={"pending_returns":data})
 
 
+@cars.route("/<int:id>/confirm_return")
+@auth_required
+def return_car(id):
+    transaction=Transaction.query.filter_by(carid=id).first()
+    borrow=Borrowed.query.filter_by(carid=id).first()
+    duration=timedelta.Timedelta(datetime.utcnow()-borrow.borrowed_on).total.hours
+    amount=Car.query.filter_by(carid=id).first().charges*duration
+
+    transaction.status="confirmed"
+    transaction.amount= amount
+
+<<<<<<< HEAD
 @cars.route("/<int:id>/accept")
 @auth_required
 def accept_car(id):
@@ -208,3 +247,11 @@ def accept_car(id):
     return render_template('cars/borrowed.html')
     #return response_with(resp.SUCCESS_200)
 
+=======
+    db.session.add(transaction)
+    db.session.commit()
+
+    Borrowed.query.filter_by(carid=id).delete()
+    # return render_template('cars/borrowed.html')
+    return response_with(resp.SUCCESS_200)
+>>>>>>> 209a401759f5937a8c2499c9c28161e07ed2048c
