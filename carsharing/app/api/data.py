@@ -22,7 +22,12 @@ car_data={"id":fields.Integer,
     "description":fields.String,
     "rating":fields.Integer,
     "ownerid":fields.String,
-    "photo":fields.String
+    "photo":fields.String,
+    "transmission":fields.String,
+    "seats":fields.Integer,
+    "luggage":fields.Integer,
+    "fuel":fields.String,
+    "engine":fields.String
 }
 
 borrowed_data={

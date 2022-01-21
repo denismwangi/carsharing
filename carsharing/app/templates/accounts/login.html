@@ -8,11 +8,12 @@
       <div class="user signinBx">
         <div class="imgBx"><img src="/static/images/car-3.jpg" alt="" /></div>
         <div class="formBx">
-          <form action="{{url_for('accounts.login')}}" method="POST">
+          <form action="{{url_for('accounts.login')}}" method="POST" name="myForm" onsubmit = "return(validate());">
             <h2>Sign In</h2>
-            <input type="text" name="username" placeholder="Username" required/>
+            <p id="demo"></p>
+            <input type="text" name="username" placeholder="Username"/>
             <input type="password" name="password" placeholder="Password" required/>
-            <input type="submit" name="" value="Login" />
+            <input type="submit" name="" value="Login"  onclick="myFunction()" />
             <p class="signup">
               Don't have an account ?
               <a href="{{url_for('accounts.register')}}" onclick="toggleForm();">Sign Up.</a>
@@ -29,6 +30,32 @@
 };
     </script>
   </section>
-
+<script>
+function validate() {
+      
+         if( document.myForm.username.value == "" ) {
+            alert( "Please provide your name!" );
+            document.myForm.username.focus() ;
+            return false;
+         }
+         if( document.myForm.EMail.value == "" ) {
+            alert( "Please provide your Email!" );
+            document.myForm.EMail.focus() ;
+            return false;
+         }
+         if( document.myForm.Zip.value == "" || isNaN( document.myForm.Zip.value ) ||
+            document.myForm.Zip.value.length != 5 ) {
+            
+            alert( "Please provide a zip in the format #####." );
+            document.myForm.Zip.focus() ;
+            return false;
+         }
+         if( document.myForm.Country.value == "-1" ) {
+            alert( "Please provide your country!" );
+            return false;
+         }
+         return( true );
+      }
+</script>
 
 {%endblock%}

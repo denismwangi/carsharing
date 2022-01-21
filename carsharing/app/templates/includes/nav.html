@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
-
+ <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
     <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
         <link href="/static/css/dashboard/sb-admin-2.min.css" rel="stylesheet">
     <link href="/static/css/dashboard/sb-admin-2.min.css" rel="stylesheet">
@@ -85,16 +85,16 @@
             </a>
             </li>
 
-            <li class="nav-item">
+           <!--  <li class="nav-item">
                 <a class="nav-link" href="">
               <i class="fa fa-hdd-o" style="color: #FFF; font-size:20px"></i>
                 <span class="nav-link-text" style="font-size:15px">Transactions</span>
             </a>
                 
-            </li>
+            </li> -->
 
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="/api/cars/pending_grants">
               <i class="fa fa-hdd-o" style="color: #FFF; font-size:20px"></i>
                 <span class="nav-link-text" style="font-size:15px">Borrow Requests</span>
             </a>
@@ -107,6 +107,14 @@
             </a>
                 
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/api/cars/pending_returns">
+              <i class="fa fa-hdd-o" style="color: #FFF; font-size:20px"></i>
+                <span class="nav-link-text" style="font-size:15px">Pending Returns</span>
+            </a>
+                
+            </li>
+
 
 
 
@@ -147,16 +155,21 @@
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
                         
                                 <img class="img-profile rounded-circle"
-                                    src="../assets/img/undraw_profile.svg">
+                                    src="/static/images/bg_1.jpg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
                              
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                <a class="dropdown-item" href="/accounts/logout">
+                              
                                     Logout
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/api/users/profile" >
+                              
+                                   Profile
                                 </a>
                             </div>
                         </li>

@@ -57,12 +57,14 @@
                   <td>{{owned.mileage}} </td>
                    <td>{{owned.rating}} </td>
                   <td>{{owned.regno}} </td>
-                   <td>{{owned.photo}} </td>
+                  <td><img src="{{owned.photo}}" height="50" width="100"></td>
+                 <!--   <td> </td> -->
                    <td>
           <div class="btn-group">
-          <a href="" class="btn btn-success" data-toggle="tooltip" title="Edit car" ><i class="fa fa-fw fa-edit"></i>Edit car</a>
-          <a href="" class="btn btn-danger" data-toggle="tooltip" title="Delete car" ><i class="fa fa-fw fa-trash"></i>Delete car</a>
-            <a href="" class="btn btn-info" data-toggle="tooltip" title="" ><i class="fa fa-fw fa-eye"></i>View</a>
+         <!--  <a href="" class="btn btn-success" data-toggle="tooltip" title="Edit car" ><i class="fa fa-fw fa-edit"></i>Edit car</a> -->
+          <a href="/api/cars/delete_car/{{owned.id}}" class="btn btn-danger" data-toggle="tooltip" title="Delete car" ><i class="fa fa-fw fa-trash"></i>Delete car</a>
+            <a href="/view-car/{{owned.id}}" class="btn btn-info" data-toggle="tooltip" title="" ><i class="fa fa-fw fa-eye"></i>View</a>
+               <a href="/api/cars/add_images/{{owned.id}}" class="btn btn-success" data-toggle="tooltip" title="" ><i class="fa fa-fw fa-eye"></i>Add images</a>
           </div>
           </td>
                 
@@ -88,51 +90,68 @@
                 </button>
             </div>
 
-            <form action="add-product-exec.php" method="POST" role="form" enctype="multipart/form-data">
+            <form action="/addcar" method="POST" role="form" enctype="multipart/form-data">
                 <div class="form-group">
                     <div class="form-row">
                         <div class="col-lg-6">
-                            <label for="exampleInputPassword1">Product Code</label>
-                            <input class="form-control" name="productCode" id="exampleInputPassword1" type="text"
-                                   placeholder="Product Code" required>
+                            <label for="exampleInputPassword1">Car Reg No</label>
+                            <input class="form-control" name="regno" id="exampleInputPassword1" type="text"
+                                   placeholder="Registration Number" required>
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="exampleInputPassword1">Brand</label>
+                            <input class="form-control" name="brand" id="exampleInputPassword1" type="text"
+                                   placeholder="Brand" required>
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="exampleInputPassword1">Charges</label>
+                            <input class="form-control" name="charges" id="exampleInputPassword1" type="text"
+                                   placeholder="Charges" required>
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="exampleInputPassword1">Mileage</label>
+                            <input class="form-control" name="mileage" id="exampleInputPassword1" type="text"
+                                   placeholder="Mileage" required>
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="exampleInputPassword1">Location</label>
+                            <input class="form-control" name="location" id="exampleInputPassword1" type="text"
+                                   placeholder="Location" required>
                         </div>
                         <div class="col-lg-6">
                             <label for="exampleInputPassword1">Description</label>
                             <input class="form-control" name="description" id="exampleInputPassword1" type="text"
                                    placeholder="Description" required>
                         </div>
-                        <div class="col-lg-6">
-                            <label for="exampleInputPassword1">Selling price</label>
-                            <input class="form-control" name="sellingPrice" id="exampleInputPassword1" type="text"
-                                   placeholder="Selling price" required>
+                         <div class="col-lg-6">
+                            <label for="exampleInputPassword1">Transmission</label>
+                            <input class="form-control" name="transmission" id="exampleInputPassword1" type="text"
+                                   placeholder="Transmission" required>
                         </div>
                         <div class="col-lg-6">
-                            <label for="exampleInputPassword1">Buying price</label>
-                            <input class="form-control" name="buyingPrice" id="exampleInputPassword1" type="text"
-                                   placeholder="Buying price" required>
+                            <label for="exampleInputPassword1">Seats</label>
+                            <input class="form-control" name="seats" id="exampleInputPassword1" type="text"
+                                   placeholder="Seats" required>
                         </div>
                         <div class="col-lg-6">
-                            <label for="exampleInputPassword1">Quantity</label>
-                            <input class="form-control" name="quantity" id="exampleInputPassword1" type="text"
-                                   placeholder="Quantity" required>
+                            <label for="exampleInputPassword1">Luggage</label>
+                            <input class="form-control" name="luggage" id="exampleInputPassword1" type="text"
+                                   placeholder="Luggage" required>
+                        </div>
+                         <div class="col-lg-6">
+                            <label for="exampleInputPassword1">Fuel Type</label>
+                            <input class="form-control" name="fuel" id="exampleInputPassword1" type="text"
+                                   placeholder="Fuel" required>
                         </div>
                         <div class="col-lg-6">
-                            <label for="exampleInputPassword1">Taxcode</label>
-                            <select class="form-control" name="taxCode">
-                                
-                                    
-                            </select>
+                            <label for="exampleInputPassword1">Engine</label>
+                            <input class="form-control" name="engine" id="exampleInputPassword1" type="text"
+                                   placeholder="Engine" required>
                         </div>
-                        <div class="col-lg-6">
-                            <label for="exampleInputPassword1">Category</label>
-                            <select class="form-control" name="department">
-                               
-                                    <option value="<?php echo $name; ?>"><
-                            </select>
-                        </div>
+                    
                         <div class="col-lg-6">
                             <label for="exampleInputPassword1">Image</label>
-                            <input class="form-control" type="file" name="fileToUpload" id="fileToUpload">
+                            <input class="form-control" type="file" name="photo" id="fileToUpload">
 
                         </div>
 
@@ -150,27 +169,6 @@
 </div>
 <script type="text/javascript">
 
-$.ajax({
-    url: 'http://localhost:5000/api/cars?offset=&count=',
-    dataType: 'json',
-    success: function(data) {
-        for (var i=0; i<data.length; i++) {
-
-            var row = $('<tr><td>' + data[i].brand+ '</td><td>' 
-              + data[i].charges + '</td><td>' 
-              + data[i].description + '</td></tr>'
-              );
-            
-            $('#dataTable').append(row);
-
-
-        }
-        console.log(data);
-    },
-    error: function(jqXHR, textStatus, errorThrown){
-        alert('Error: ' + textStatus + ' - ' + errorThrown);
-    }
-});
 
 
 

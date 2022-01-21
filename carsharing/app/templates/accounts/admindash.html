@@ -1,0 +1,275 @@
+{% include 'includes/adminnav.html' %}
+     
+      <div class="container-fluid">
+      <!-- Breadcrumbs-->
+     
+        <div id="page-inner1" style="margin-left: 30px">
+
+                <!-- /. ROW  -->
+  
+                <div class="row">
+                    <div class="col-md-3 col-sm-12 col-xs-12" s>
+          <div class="board" >
+                        <div class="panel panel-primary" style="border-radius:7px">
+            <div class="number">
+              <h3>
+                <h3>{{total_owned}}</h3>
+                <small>All Vahicles</small>
+              </h3> 
+            </div>
+            <div class="icon">
+                <i class="fa fa-shopping-cart fa-5x blue"></i>
+            </div>
+     
+                        </div>
+            </div>
+                    </div>
+                     <div class="col-md-3 col-sm-12 col-xs-12">
+          <div class="board">
+                        <div class="panel panel-primary" style="border-radius:7px">
+            <div class="number">
+              <h3>
+                <h3>{{total_onlend}}</h3>
+                <small>Car Borrowed</small>
+              </h3> 
+            </div>
+            <div class="icon">
+               <i class="fa fa-money fa-5x red"></i>
+            </div>
+     
+                        </div>
+            </div>
+                    </div>
+          
+                 <div class="col-md-3 col-sm-12 col-xs-12" >
+          <div class="board" >
+                        <div class="panel panel-primary" style="border-radius:7px">
+            <div class="number">
+              <h3>
+                <h3>{{data.total_income}}</h3>
+                <small>Total Income</small>
+              </h3> 
+            </div>
+            <div class="icon">
+                            <i class="fa fa-hdd-o fa-5x green" aria-hidden="true"></i>
+               <!-- <i class="fa fa-user fa-5x yellow"></i> -->
+            </div>
+     
+                        </div>
+            </div>
+                    </div>
+          
+                 <div class="col-md-3 col-sm-12 col-xs-12">
+          <div class="board">
+                        <div class="panel panel-primary" style="border-radius:7px">
+            <div class="number">
+              <h3>
+                <h3>{{data.total_income}}</h3>
+                <small>Total Spent</small>
+              </h3> 
+            </div>
+            <div class="icon">
+                <i class="fa fa-building fa-5x yellow"></i>
+            </div>
+     
+                        </div>
+            </div>
+                    </div>
+          
+              
+                </div>
+             <div class="row">
+                       <style type="text/css">
+                        .col-sm-611{ 
+                                position: relative;
+    width: 47%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-left: 20px;
+   
+                         } .col-xs-100{
+                                position: relative;
+    width: 47%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-left: 40px;
+     min-height: 1px;
+
+                         }
+                         @media only screen and (max-width: 855px){
+    .col-xs-100{
+        width: 90%;
+        margin-bottom: 50px;
+        margin-top: 50px;
+        height: 100%;
+    }
+    .col-sm-611{
+        width: 90%;
+        margin-bottom: 50px;
+        margin-top: 50px;
+        height: 100%;
+
+    }
+}
+                           
+                       </style>
+                        <div class="col-sm-611 col-xs-121" style="background-color: #fff; border-radius: 10px">
+                        <div class="panel panel-primary" style="border-radius:37px">  
+                            <div class="panel panel-default chartJs" style="border-radius: 20px">
+                                <div class="panel-heading">
+                                    <div class="card-title">
+                                        <div class="title" style="margin-left: 10px">Income</div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="chart-container" style="background: #fff">
+                                      <canvas id="graphCanvas1"></canvas>
+                                   </div>
+
+   
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  
+                       <div class=" col-xs-100" style="background-color: #fff; border-radius: 10px">
+                            <div class="panel panel-default chartJs">
+                                <div class="panel-heading">
+                                    <div class="card-title">
+                                        <div class="title" style="margin-left: 10px">Spending</div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                  
+                                   <div id="chart-container" style="background: #fff">
+        <canvas id="graphCanvas"></canvas>
+    </div>
+
+               
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     </div>
+    </div>
+</div>
+        
+
+
+               
+
+  </body>
+  <script type="text/javascript">
+      
+        $(document).ready(function () {
+            showGraph1();
+        });
+
+
+        function showGraph1()
+        {
+            {
+                $.post("/api/users/transactions/income",
+                function (income)
+                {
+                    console.log(income);
+
+
+                    var income=income.transactions_income;
+                    var date = [];
+                    var amount = [];
+
+                    for (var i in income) {
+                        date.push(income[i].date);
+                        amount.push(income[i].amount);
+                    }
+
+
+
+                    var chartdata1 = {
+                        labels: date,
+                        datasets: [
+                            {
+                                label: 'amount',
+                                backgroundColor: '#49e2ff',
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: '#CCCCCC',
+                                hoverBorderColor: '#666666',
+                                strokeColor: "#22A7F0",
+                                animationEnabled: true,
+                                data: amount
+                            }
+                        ]
+                    };
+
+                    var graphTarget = $("#graphCanvas1");
+
+                    var barGraph = new Chart(graphTarget, {
+                        type: 'line',
+                        data: chartdata1
+                    });
+                });
+            }
+        }
+      
+      
+        $(document).ready(function () {
+            showGraph();
+        });
+
+
+        function showGraph()
+        {
+            {
+                $.post("/api/users/transactions/spending",
+                function (data)
+                {
+                    console.log(data);
+                    var data =data.transactions_spending;
+                    var date = [];
+                    var amount = [];
+
+                    for (var i in data) {
+                        date.push(data[i].date);
+                        amount.push(data[i].amount);
+                    }
+
+                    //console.log(data)
+
+                    var chartdata = {
+                        labels: date,
+                        datasets: [
+                            {
+                                label: 'Amount',
+                                backgroundColor: '#49e2ff',
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: '#CCCCCC',
+                                hoverBorderColor: '#666666',
+                                strokeColor: "#22A7F0",
+    
+                                data: amount
+                            }
+                        ]
+                    };
+
+                    var graphTarget = $("#graphCanvas");
+
+                    var barGraph = new Chart(graphTarget, {
+                        type: 'bar',
+                        data: chartdata
+                    });
+                });
+            }
+        }
+       
+                        
+  </script>
+  <script type="text/javascript" src="/static/css/dashboard/js/Chart.min.js"></script>
+<script type="text/javascript" src="/static/css/dashboard//js/sweetalert.min.js"></script>
+  <script src="/static/css/dashboard/js/sb-admin-2.min.js"></script>
+   <script src="/static/css/dashboard/js/sb-admin-2.min.js"></script>
+      <script src="/static/js/bootstrap.min.js"></script>
+  </html>

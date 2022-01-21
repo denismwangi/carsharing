@@ -9,9 +9,9 @@
                     Exit</i></a>
                     <a onclick="goBack()" class="btn btn-info float-right"  style="color:#fff; margin-right: 10px"> <i class="fa fa-caret-left" aria-hidden="true"></i> Back</a>
                     
-
+<!-- 
                     <a data-toggle="modal" data-target="#addModal" class="btn btn-primary float-right"  style="color: #ffffff; margin-right: 10px"><i class="fa fa-plus-square" aria-hidden="true"></i> Add
-                    Car</a>
+                    Car</a> -->
     </div>
         <div class="card-body">
           <div class="table-responsive">
@@ -57,11 +57,11 @@
                   <td>{{cars.mileage}} </td>
                    <td>{{cars.rating}} </td>
                   <td>{{cars.regno}} </td>
-                   <td>{{cars.photo}} </td>
+                       <td><img src="{{cars.photo}}" height="50" width="100"></td>
                    <td>
           <div class="btn-group">
           <a href="/api/cars/{{cars.id}}/bid" class="btn btn-success" data-toggle="tooltip" title="Edit car" ><i class="fa fa-fw fa-edit"></i>Borrow</a>
-          <a href="" class="btn btn-info" data-toggle="tooltip" title="" ><i class="fa fa-fw fa-eye"></i>View</a>
+          <a href="/view-car/{{cars.id}}" class="btn btn-info" data-toggle="tooltip" title="" ><i class="fa fa-fw fa-eye"></i>View</a>
           </div>
           </td>
                 
@@ -76,28 +76,6 @@
       </div>
     </div>
 <script type="text/javascript">
-
-$.ajax({
-    url: 'http://localhost:5000/api/cars?offset=&count=',
-    dataType: 'json',
-    success: function(data) {
-        for (var i=0; i<data.length; i++) {
-
-            var row = $('<tr><td>' + data[i].brand+ '</td><td>' 
-              + data[i].charges + '</td><td>' 
-              + data[i].description + '</td></tr>'
-              );
-            
-            $('#dataTable').append(row);
-
-
-        }
-        console.log(data);
-    },
-    error: function(jqXHR, textStatus, errorThrown){
-        alert('Error: ' + textStatus + ' - ' + errorThrown);
-    }
-});
 
 
 

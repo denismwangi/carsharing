@@ -13,7 +13,7 @@
                         <div class="panel panel-primary" style="border-radius:7px">
             <div class="number">
               <h3>
-                <h3>55</h3>
+                <h3>{{total_owned}}</h3>
                 <small>All Vahicles</small>
               </h3> 
             </div>
@@ -29,7 +29,7 @@
                         <div class="panel panel-primary" style="border-radius:7px">
             <div class="number">
               <h3>
-                <h3>4</h3>
+                <h3>{{total_onlend}}</h3>
                 <small>Car Borrowed</small>
               </h3> 
             </div>
@@ -46,7 +46,7 @@
                         <div class="panel panel-primary" style="border-radius:7px">
             <div class="number">
               <h3>
-                <h3>4500</h3>
+                <h3>{{data.total_income}}</h3>
                 <small>Total Income</small>
               </h3> 
             </div>
@@ -64,7 +64,7 @@
                         <div class="panel panel-primary" style="border-radius:7px">
             <div class="number">
               <h3>
-                <h3>1200</h3>
+                <h3>{{data.total_spent}}</h3>
                 <small>Total Spent</small>
               </h3> 
             </div>
@@ -120,7 +120,7 @@
                             <div class="panel panel-default chartJs" style="border-radius: 20px">
                                 <div class="panel-heading">
                                     <div class="card-title">
-                                        <div class="title" style="margin-left: 10px">Last seven days</div>
+                                        <div class="title" style="margin-left: 10px">Income</div>
                                     </div>
                                 </div>
                                 <div class="panel-body">
@@ -139,11 +139,11 @@
                             <div class="panel panel-default chartJs">
                                 <div class="panel-heading">
                                     <div class="card-title">
-                                        <div class="title" style="margin-left: 10px">Monthly Income</div>
+                                        <div class="title" style="margin-left: 10px">Spending</div>
                                     </div>
                                 </div>
                                 <div class="panel-body">
-                                   <!--  <canvas id="bar-chart" class="chart"></canvas> -->
+                                  
                                    <div id="chart-container" style="background: #fff">
         <canvas id="graphCanvas"></canvas>
     </div>
@@ -162,6 +162,111 @@
                
 
   </body>
+  <script type="text/javascript">
+      
+        $(document).ready(function () {
+            showGraph1();
+        });
+
+
+        function showGraph1()
+        {
+            {
+                $.post("/api/users/transactions/income",
+                function (income)
+                {
+                    console.log(income);
+
+
+                    var income=income.transactions_income;
+                    var date = [];
+                    var amount = [];
+
+                    for (var i in income) {
+                        date.push(income[i].date);
+                        amount.push(income[i].amount);
+                    }
+
+
+
+                    var chartdata1 = {
+                        labels: date,
+                        datasets: [
+                            {
+                                label: 'amount',
+                                backgroundColor: '#49e2ff',
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: '#CCCCCC',
+                                hoverBorderColor: '#666666',
+                                strokeColor: "#22A7F0",
+                                animationEnabled: true,
+                                data: amount
+                            }
+                        ]
+                    };
+
+                    var graphTarget = $("#graphCanvas1");
+
+                    var barGraph = new Chart(graphTarget, {
+                        type: 'bar',
+                        data: chartdata1
+                    });
+                });
+            }
+        }
+      
+      
+        $(document).ready(function () {
+            showGraph();
+        });
+
+
+        function showGraph()
+        {
+            {
+                $.post("/api/users/transactions/spending",
+                function (data)
+                {
+                    console.log(data);
+                    var data =data.transactions_spending;
+                    var date = [];
+                    var amount = [];
+
+                    for (var i in data) {
+                        date.push(data[i].date);
+                        amount.push(data[i].amount);
+                    }
+
+                    //console.log(data)
+
+                    var chartdata = {
+                        labels: date,
+                        datasets: [
+                            {
+                                label: 'Amount',
+                                backgroundColor: '#49e2ff',
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: '#CCCCCC',
+                                hoverBorderColor: '#666666',
+                                strokeColor: "#22A7F0",
+    
+                                data: amount
+                            }
+                        ]
+                    };
+
+                    var graphTarget = $("#graphCanvas");
+
+                    var barGraph = new Chart(graphTarget, {
+                        type: 'bar',
+                        data: chartdata
+                    });
+                });
+            }
+        }
+       
+                        
+  </script>
   <script type="text/javascript" src="/static/css/dashboard/js/Chart.min.js"></script>
 <script type="text/javascript" src="/static/css/dashboard//js/sweetalert.min.js"></script>
   <script src="/static/css/dashboard/js/sb-admin-2.min.js"></script>

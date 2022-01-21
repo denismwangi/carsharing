@@ -75,28 +75,6 @@
     </div>
 <script type="text/javascript">
 
-$.ajax({
-    url: 'http://localhost:5000/api/cars?offset=&count=',
-    dataType: 'json',
-    success: function(data) {
-        for (var i=0; i<data.length; i++) {
-
-            var row = $('<tr><td>' + data[i].brand+ '</td><td>' 
-              + data[i].charges + '</td><td>' 
-              + data[i].description + '</td></tr>'
-              );
-            
-            $('#dataTable').append(row);
-
-
-        }
-        console.log(data);
-    },
-    error: function(jqXHR, textStatus, errorThrown){
-        alert('Error: ' + textStatus + ' - ' + errorThrown);
-    }
-});
-
 
 
 </script>

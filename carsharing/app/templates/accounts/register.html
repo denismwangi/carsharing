@@ -6,14 +6,14 @@
  
     <div class="user signinBx" >
       <div class="formBx" style="margin-bottom: 30px;">
-        <form action="{{url_for('accounts.register')}}" method="POST" enctype="multipart/form-data">
+<form action="{{url_for('accounts.register')}}" onsubmit="return(validate());" name="myForm" method="POST" enctype="multipart/form-data">
           <h2 style="margin-top: 30px;">Create an account</h2>
-          <input type="text" name="username" placeholder="Username"  required/>
-          <input type="text" name="about" placeholder="about"  required/>
-          <input type="text" name="email" placeholder="email"  required/>
-          <input type="text" name="phone" placeholder="07xxxxxxxx"  required/>
-          <input type="password" name="password1" placeholder="Create Password"  required/>
-          <input type="password" name="password2" placeholder="Confirm Password" required />
+          <input type="text" name="username" placeholder="Username" required />
+          <input type="text" name="about" placeholder="about"  required />
+          <input type="email" name="email" placeholder="email" pattern=".+@.+\.com" size="30"  required/>
+          <input type="tel" name="phone" placeholder="07xxxxxxxx" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" required />
+          <input type="password" id="password" name="password1" placeholder="Create Password"  required/>
+          <input type="password" id="rpassword" name="password2" placeholder="Confirm Password" required />
           <input type="file" name="photo" required/>
           <input type="submit" name="submit" value="Sign Up" />
           <p class="signup">
@@ -29,3 +29,45 @@
   
 </section>
 {%endblock%}
+
+
+<script type="text/javascript">
+  function checkPass(){
+         var pass  = document.getElementById("password").value;
+         var rpass = document.getElementById("rpassword").value;
+
+         // console.log(pass);
+         // console.log(rpass);
+        if(pass != rpass){
+            document.getElementById("submit").disabled = true;
+            alert("Entered Password is not matching!! Try Again");
+        }else{
+            // $('.missmatch').html("");
+            document.getElementById("submit").disabled = false;
+        }
+  }
+
+function validate(){      
+         if( document.myForm.username.value == "" ) {
+            alert( "Please provide your name!" );
+            document.myForm.username.focus() ;
+            return false;
+         }
+         if( document.myForm.EMail.value == "" ) {
+            alert( "Please provide your Email!" );
+            document.myForm.EMail.focus() ;
+            return false;
+         }
+         if( document.myForm.phone.value == "" || isNaN( document.myForm.phone.value ) ||
+            document.myForm.phone.value.length != 10 ) {
+            
+            alert( "Please provide a correct #####." );
+            document.myForm.phone.focus() ;
+            return false;
+         }
+         
+         return( true );
+      }
+
+
+</script>
