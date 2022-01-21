@@ -1,5 +1,7 @@
+
 from flask import jsonify,g
 from app.models import Borrowed, Image, Transaction, User,Car
+
 from flask import Blueprint,render_template,redirect
 from flask_login import current_user
 from flask_restful import marshal
@@ -112,6 +114,14 @@ def delete_user(id):
 def profile():
     data=marshal(current_user,user_data)
     return render_template('cars/profile.html', data=data)
+
+
+@users.route("/profile")
+@auth_required
+def profile():
+    data=marshal(current_user,user_data)
+    return render_template('cars/profile.html', data=data)
+
 
 
 @users.route("/<int:id>")

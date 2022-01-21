@@ -1,3 +1,4 @@
+
 from flask import render_template,request
 from flask import Blueprint
 from flask import render_template,request,Blueprint,current_app,redirect,url_for
@@ -5,6 +6,7 @@ from app.models import Borrowed, Transaction, User,Car
 from app.api.routes.cars import all_cars,car__single
 from flask_restful import marshal
 from flask_login import login_required
+
 main=Blueprint("main",__name__)
 from secrets import token_urlsafe
 from app import db,user_sids
@@ -49,6 +51,7 @@ def add_car():
         file=request.files["photo"]
         photo=f"{token_urlsafe(16)}.{file.filename.split('.')[-1]}"
         file.save(os.path.join(current_app.config['UPLOAD_FOLDER'],photo))
+
 
         car=Car(ownerid=current_user.id,
             regno=regno,
